@@ -33,7 +33,7 @@
             const vCard = `BEGIN:VCARD\nVERSION:4.0\nN:${surname};${name};;;\nTEL:${phone}\nEMAIL:${email}\nADR:${address}\nEND:VCARD`;
             
             try {
-                const writer = new NDEFWriter();
+                const writer = new NDEFReader();
                 await writer.write(vCard);
                 document.getElementById('status').textContent = 'vCard scritta con successo su NFC!';
             } catch (error) {
