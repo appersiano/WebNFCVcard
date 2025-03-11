@@ -1,20 +1,37 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrivi vCard su NFC</title>
+    <title>Write vCard to NFC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Scrivi la tua vCard su NFC</h1>
-    <form id="vcard-form">
-        <label>Nome: <input type="text" id="name" required></label><br>
-        <label>Cognome: <input type="text" id="surname" required></label><br>
-        <label>Email: <input type="email" id="email" required></label><br>
-        <label>Website Link (eg. LinkedIn/Personal Website): <input url="url" id="website" required></label><br>
-        <button type="button" id="write-nfc">Scrivi su NFC</button>
-    </form>
-    <p id="status"></p>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <h2 class="text-center mb-4">Write Your vCard to NFC</h2>
+            <form id="vcard-form">
+                <div class="mb-3">
+                    <label class="form-label">📝 First Name</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">📝 Last Name</label>
+                    <input type="text" id="surname" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">📧 Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">🔗 Website Link (eg. LinkedIn/Personal Website):</label>
+                    <input type="text" id="website" class="form-control">
+                </div>
+                <button type="button" id="write-nfc" class="btn btn-primary w-100">📲 Write to NFC</button>
+            </form>
+            <p id="status" class="mt-3 text-center"></p>
+        </div>
+    </div>
 
     <script>
         document.getElementById('write-nfc').addEventListener('click', async () => {
@@ -48,7 +65,6 @@
             
             try {
                 const writer = new NDEFReader();
-                //await writer.write(vCard);
                 await writer.write({
                     records: [
                         { 
@@ -57,11 +73,14 @@
                             data: new TextEncoder().encode(vCard)
                         }],
                  });
-                document.getElementById('status').textContent = 'vCard scritta con successo su NFC!';
+                document.getElementById('status').textContent = '✅ vCard successfully written to NFC!';
+                document.getElementById('status').classList.add('text-success');
             } catch (error) {
-                document.getElementById('status').textContent = 'Errore durante la scrittura: ' + error;
+                document.getElementById('status').textContent = '❌ Error writing to NFC: ' + error;
+                document.getElementById('status').classList.add('text-danger');
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
