@@ -6,11 +6,10 @@
     <title>Scrivi vCard su NFC</title>
 </head>
 <body>
-    <h1>Scrivi vCard v4.0 su NFC</h1>
+    <h2>Scrivi la tua vCard su NFC</h1>
     <form id="vcard-form">
         <label>Nome: <input type="text" id="name" required></label><br>
         <label>Cognome: <input type="text" id="surname" required></label><br>
-        <label>Telefono: <input type="tel" id="phone"></label><br>
         <label>Email: <input type="email" id="email" required></label><br>
         <label>Website Link (eg. LinkedIn/Personal Website): <input url="url" id="website" required></label><br>
         <button type="button" id="write-nfc">Scrivi su NFC</button>
@@ -27,20 +26,15 @@
             const fields = {
                 name: document.getElementById('name').value.trim(),
                 surname: document.getElementById('surname').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 website: document.getElementById('website').value.trim(),
             };
             
-            let vCard = "BEGIN:VCARD\nVERSION:4.0";
+            let vCard = "BEGIN:VCARD\nVERSION:2.1";
             
             if (fields.surname || fields.name) {
-                vCard += `\nFN:${fields.name} ${fields.surname}`;
+                //vCard += `\nFN:${fields.name} ${fields.surname}`;
                 vCard += `\nN:${fields.surname};${fields.name};;;`;
-            }
-            
-            if (fields.phone) {
-                vCard += `\nTEL;TYPE=work,voice:${fields.phone}`;
             }
             
             if (fields.email) {
@@ -54,11 +48,15 @@
             
             try {
                 const writer = new NDEFReader();
+                //await writer.write(vCard);
                 await writer.write({
-                    records: [{ recordType: "mime", data: "text/vcard"},
-                             { recordType: "text", data: vCard}
-                             ],
-                  });
+                    records: [
+                        { 
+                            recordType: "mime",
+                            mediaType: "text/vcard",
+                            data: new TextEncoder().encode(vCard)
+                        }],
+                 });
                 document.getElementById('status').textContent = 'vCard scritta con successo su NFC!';
             } catch (error) {
                 document.getElementById('status').textContent = 'Errore durante la scrittura: ' + error;
