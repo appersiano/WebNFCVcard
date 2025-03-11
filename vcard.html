@@ -36,7 +36,7 @@
     <script>
         document.getElementById('write-nfc').addEventListener('click', async () => {
             if (!('NDEFReader' in window)) {
-                document.getElementById('status').textContent = 'Web NFC non supportato dal browser';
+                document.getElementById('status').textContent = 'Web NFC is not supported by your browser, use Chrome on mobile';
                 return;
             }
             
