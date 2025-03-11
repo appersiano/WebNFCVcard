@@ -54,7 +54,9 @@
             
             try {
                 const writer = new NDEFReader();
-                await writer.write(vCard);
+                await writer.write({
+                    records: [{ recordType: "text/vcard", data: vCard }],
+                  });
                 document.getElementById('status').textContent = 'vCard scritta con successo su NFC!';
             } catch (error) {
                 document.getElementById('status').textContent = 'Errore durante la scrittura: ' + error;
