@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrivi vCard su NFC</title>
+</head>
+<body>
+    <h1>Scrivi vCard v4.0 su NFC</h1>
+    <form id="vcard-form">
+        <label>Nome: <input type="text" id="name" required></label><br>
+        <label>Cognome: <input type="text" id="surname" required></label><br>
+        <label>Telefono: <input type="tel" id="phone" required></label><br>
+        <label>Email: <input type="email" id="email" required></label><br>
+        <label>Indirizzo: <input type="text" id="address"></label><br>
+        <button type="button" id="write-nfc">Scrivi su NFC</button>
+    </form>
+    <p id="status"></p>
+
+    <script>
+        document.getElementById('write-nfc').addEventListener('click', async () => {
+            if (!('NDEFWriter' in window)) {
+                document.getElementById('status').textContent = 'Web NFC non supportato dal browser';
+                return;
+            }
+            
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('surname').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            
+            const vCard = `BEGIN:VCARD\nVERSION:4.0\nN:${surname};${name};;;\nTEL:${phone}\nEMAIL:${email}\nADR:${address}\nEND:VCARD`;
+            
+            try {
+                const writer = new NDEFWriter();
+                await writer.write(vCard);
+                document.getElementById('status').textContent = 'vCard scritta con successo su NFC!';
+            } catch (error) {
+                document.getElementById('status').textContent = 'Errore durante la scrittura: ' + error;
+            }
+        });
+    </script>
+</body>
+</html>
