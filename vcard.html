@@ -10,9 +10,9 @@
     <form id="vcard-form">
         <label>Nome: <input type="text" id="name" required></label><br>
         <label>Cognome: <input type="text" id="surname" required></label><br>
-        <label>Telefono: <input type="tel" id="phone" required></label><br>
+        <label>Telefono: <input type="tel" id="phone"></label><br>
         <label>Email: <input type="email" id="email" required></label><br>
-        <label>Indirizzo: <input type="text" id="address"></label><br>
+        <label>Website Link (eg. LinkedIn/Personal Website): <input url="url" id="website" required></label><br>
         <button type="button" id="write-nfc">Scrivi su NFC</button>
     </form>
     <p id="status"></p>
@@ -24,13 +24,33 @@
                 return;
             }
             
-            const name = document.getElementById('name').value;
-            const surname = document.getElementById('surname').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const address = document.getElementById('address').value;
+            const fields = {
+                name: document.getElementById('name').value.trim(),
+                surname: document.getElementById('surname').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                website: document.getElementById('website').value.trim(),
+            };
             
-            const vCard = `BEGIN:VCARD\nVERSION:4.0\nN:${surname};${name};;;\nTEL:${phone}\nEMAIL:${email}\nADR:${address}\nEND:VCARD`;
+            let vCard = "BEGIN:VCARD\nVERSION:4.0";
+            
+            if (fields.surname || fields.name) {
+                vCard += `\nFN:${fields.name} ${fields.surname}`;
+                vCard += `\nN:${fields.surname};${fields.name};;;`;
+            }
+            
+            if (fields.phone) {
+                vCard += `\nTEL;TYPE=work,voice:${fields.phone}`;
+            }
+            
+            if (fields.email) {
+                vCard += `\nEMAIL;TYPE=work:${fields.email}`;
+            }
+            if (fields.website) {
+                vCard += `\nURL;TITLE:https:${fields.website}`;
+            }
+            
+            vCard += "\nEND:VCARD";
             
             try {
                 const writer = new NDEFReader();
