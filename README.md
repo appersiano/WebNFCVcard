@@ -40,3 +40,6 @@ If you’re a company organizing events and need a customized version of WebNFCV
 - Add more fields based on the vCard specification.
 
 Your feedback and contributions are highly appreciated! 💬
+
+## License
+MIT License
